@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.22.0 (955b78124)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: spacedeck
+  name: spacedeck
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: spacedeck
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert
+        kompose.version: 1.22.0 (955b78124)
+      creationTimestamp: null
+      labels:
+        io.kompose.service: spacedeck
+    spec:
+      containers:
+        - image: spacedeck:local
+          name: spacedeck
+          ports:
+            - containerPort: 9666
+          resources: {}
+          volumeMounts:
+            - mountPath: /app/storage
+              name: spacedeck-claim0
+            - mountPath: /app/database.sqlite
+              name: spacedeck-claim1
+      restartPolicy: Always
+      volumes:
+        - name: spacedeck-claim0
+          persistentVolumeClaim:
+            claimName: spacedeck-claim0
+        - name: spacedeck-claim1
+          persistentVolumeClaim:
+            claimName: spacedeck-claim1
+status: {}
